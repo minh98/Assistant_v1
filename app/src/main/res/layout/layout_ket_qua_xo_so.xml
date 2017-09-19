@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:padding="8dp"
+    >
+
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ket qua xo so"
+        android:textColor="@color/colorWhite"
+        android:textSize="30sp"
+        android:gravity="center_horizontal"/>
+
+    <TextView
+        android:id="@+id/tv_title_xo_so"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Mien Bac-13/9/2017-thu tu"
+        android:textColor="@color/colorWhite"
+        android:textStyle="italic"
+        android:gravity="center_horizontal"/>
+
+    <include layout="@layout/hr"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Giai"
+            android:layout_marginLeft="4dp"
+            android:textColor="@color/colorWhite"
+             />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="9"
+            android:text="Ket qua"
+
+            android:textColor="@color/colorWhite"
+            android:gravity="center_horizontal"
+            />
+    </LinearLayout>
+    <include layout="@layout/hr"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="DB"
+            android:layout_marginLeft="4dp"
+
+            android:textColor="@color/colorWhite"
+             />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="9"
+            android:text="Ket qua"
+            android:id="@+id/tvDacBiet"
+            android:textColor="@color/colorWhite"
+            android:gravity="center_horizontal"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Nhat"
+
+            android:layout_marginLeft="4dp"
+
+            android:textColor="@color/colorWhite"
+             />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="9"
+            android:text="Ket qua"
+            android:textColor="@color/colorWhite"
+            android:id="@+id/tvNhat"
+            android:gravity="center_horizontal"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Nhi"
+
+            android:layout_marginLeft="4dp"
+
+            android:textColor="@color/colorWhite"
+             />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="9"
+            android:text="Ket qua"
+            android:textColor="@color/colorWhite"
+            android:id="@+id/tvNhi"
+            android:gravity="center_horizontal"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Ba"
+
+            android:layout_marginLeft="4dp"
+
+            android:textColor="@color/colorWhite"
+             />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="9"
+            android:text="Ket qua"
+            android:textColor="@color/colorWhite"
+            android:id="@+id/tvBa"
+            android:gravity="center_horizontal"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Tu"
+
+            android:layout_marginLeft="4dp"
+
+            android:textColor="@color/colorWhite"
+             />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="9"
+            android:text="Ket qua"
+            android:textColor="@color/colorWhite"
+            android:id="@+id/tvTu"
+            android:gravity="center_horizontal"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Nam"
+
+            android:layout_marginLeft="4dp"
+
+            android:textColor="@color/colorWhite"
+             />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="9"
+            android:text="Ket qua"
+            android:textColor="@color/colorWhite"
+            android:id="@+id/tvNam"
+            android:gravity="center_horizontal"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Sau"
+
+            android:layout_marginLeft="4dp"
+
+            android:textColor="@color/colorWhite"
+             />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="9"
+            android:text="Ket qua"
+            android:textColor="@color/colorWhite"
+            android:id="@+id/tvSau"
+            android:gravity="center_horizontal"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Bay"
+
+            android:layout_marginLeft="4dp"
+
+            android:textColor="@color/colorWhite"
+             />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="9"
+            android:text="Ket qua"
+            android:textColor="@color/colorWhite"
+            android:id="@+id/tvBay"
+            android:gravity="center_horizontal"
+            />
+    </LinearLayout>
+    <include layout="@layout/hr"/>
+    <TextView
+        android:id="@+id/tv_xem_them"
+        android:layout_marginTop="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:textColor="#03A9F4"
+        android:text="Xem them➟"/>
+
+</LinearLayout>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="8dp">
+
+
+    <TextView
+        android:id="@+id/tvTenDiaPhuong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="Quyet Thang, Thanh pho Thai Nguyen, Thai Nguyen"
+        android:textSize="30sp"
+        android:textColor="#ffffff"
+        />
+
+    <TextView
+        android:id="@+id/tvThoiGian"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvTenDiaPhuong"
+        android:layout_marginTop="10dp"
+        android:text="CN 22:00, Mua"
+        android:textColor="#9E9E9E"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorView"
+        android:id="@+id/hr1"
+        android:layout_below="@+id/tvThoiGian"
+        />
+    <LinearLayout
+        android:id="@+id/layout_nhiet_do"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_below="@+id/tvThoiGian"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/img_thoi_tiet"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@mipmap/ic_launcher"/>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.3"
+            >
+
+            <TextView
+                android:id="@+id/tv_nhiet_do"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:text="27"
+                android:textColor="@color/colorWhite"
+                android:textSize="70sp"
+                />
+
+            <TextView
+                android:id="@+id/tv_loai_nhiet_do_c"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+                android:text="°C"
+                android:layout_alignTop="@+id/tv_nhiet_do"
+                android:layout_toRightOf="@+id/tv_nhiet_do"
+                android:layout_toEndOf="@+id/tv_nhiet_do"
+                android:layout_marginTop="12dp"/>
+
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.7"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/tv_tinh_trang_thoi_tiet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:text="Tinh trang thoi tiet"
+                android:textColor="#ffffff"/>
+
+            <TextView
+                android:id="@+id/tv_do_am"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:text="Do am: 95%"
+                android:textColor="#ffffff"/>
+
+            <TextView
+                android:id="@+id/tv_van_toc_gio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:textColor="#ffffff" android:layout_margin="4dp"
+                android:text="Gio: 6km/h"/>
+        </LinearLayout>
+
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorView"
+        android:id="@+id/hr2"
+        android:layout_below="@+id/layout_nhiet_do"
+        />
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_below="@+id/layout_nhiet_do"
+        android:id="@+id/list_thoi_tiet"
+        android:layout_marginTop="8dp">
+
+    </android.support.v7.widget.RecyclerView>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorView"
+        android:id="@+id/hr3"
+        android:layout_below="@+id/list_thoi_tiet"
+        />
+    <TextView
+        android:id="@+id/source"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/list_thoi_tiet"
+        android:text="openweathermap.org"
+        android:textSize="8sp"
+        android:textColor="#9E9E9E"/>
+    <TextView
+        android:id="@+id/tv_chi_tiet_thoi_tiet"
+        android:layout_marginTop="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/source"
+        android:textColor="#03A9F4"
+        android:text="Xem chi tiet➟"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorView"
+        android:id="@+id/hr4"
+        android:layout_below="@+id/tv_chi_tiet_thoi_tiet"
+        />
+</RelativeLayout>

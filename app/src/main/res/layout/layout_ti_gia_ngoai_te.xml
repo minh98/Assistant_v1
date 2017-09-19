@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+    android:padding="8dp"
+    >
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="DongABank"
+        android:textSize="40sp"
+        android:textColor="#4DD0E1"
+        android:gravity="center_horizontal"
+        />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ti gia ngoai te"
+        android:textStyle="italic"
+        android:textColor="#7986CB"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="4dp"
+        android:layout_below="@+id/textView2"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="(Don vi:VND)"
+        android:textColor="@color/colorWhite"
+        android:layout_below="@+id/textView3"
+        android:gravity="center_horizontal"
+        android:id="@+id/dfdfd"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorView"
+        android:id="@+id/hr1"
+        android:layout_below="@+id/dfdfd"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/dfdfd"
+        android:id="@+id/linearLayout">
+
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="Ma"
+            android:textColor="#8BC34A"
+            android:gravity="center_horizontal"/>
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:text="Mua vao"
+            android:textColor="@color/colorWhite"
+            android:gravity="center_horizontal"/>
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:text="C.khoan"
+            android:textColor="@color/colorWhite"
+            android:gravity="center_horizontal"/>
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:text="Ban ra"
+            android:textColor="@color/colorWhite"
+            android:gravity="center_horizontal"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorView"
+        android:id="@+id/hr2"
+        android:layout_below="@+id/linearLayout"
+        />
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:id="@+id/list_ngoai_te"
+        android:layout_below="@+id/linearLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorView"
+        android:id="@+id/hr3"
+        android:layout_below="@+id/list_ngoai_te"
+        />
+    <TextView
+        android:id="@+id/tv_chi_tiet_ngoai_te"
+        android:layout_marginTop="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/list_ngoai_te"
+        android:textColor="#03A9F4"
+        android:text="Xem chi tiet➟"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorView"
+        android:id="@+id/hr4"
+        android:layout_below="@+id/tv_chi_tiet_ngoai_te"
+        />
+</RelativeLayout>

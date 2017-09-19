@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+
+        <TextView
+            android:id="@+id/tv_ma"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="Ma"
+            android:textStyle="bold"
+            android:textColor="#8BC34A"
+            android:gravity="center_horizontal"/>
+
+        <TextView
+            android:id="@+id/tv_mua_vao"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:text="Mua vao"
+            android:textColor="#ffffff"
+            android:gravity="center_horizontal"/>
+
+        <TextView
+            android:id="@+id/tv_chung_khoan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:text="C.khoan"
+            android:textColor="#ffffff"
+            android:gravity="center_horizontal"/>
+
+        <TextView
+            android:id="@+id/tv_ban_ra"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:text="Ban ra"
+            android:textColor="#ffffff"
+            android:gravity="center_horizontal"/>
+
+</LinearLayout>
