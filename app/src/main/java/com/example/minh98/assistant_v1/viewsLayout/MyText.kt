@@ -30,7 +30,7 @@ class MyText : AppCompatTextView {
 
 	private fun init() {
 		setBackgroundResource(R.drawable.bg_my_text)
-		setPadding(16,8,16,8)
+		setPadding(32,16,32,16)
 		val layoutParam:LinearLayout.LayoutParams=(LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT))
 		layoutParam.gravity=Gravity.RIGHT
 		setTextColor(Color.WHITE)

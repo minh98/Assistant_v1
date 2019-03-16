@@ -37,15 +37,15 @@ class IntroActivity : AppCompatActivity() {
 		mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
 
 		// Set up the ViewPager with the sections adapter.
-		mViewPager = findViewById(R.id.container) as ViewPager
+		mViewPager = findViewById(R.id.container)
 		mViewPager!!.adapter = mSectionsPagerAdapter
 
 
-		val fab = findViewById(R.id.fab) as FloatingActionButton
-		fab.setOnClickListener(View.OnClickListener { view ->
+		val fab = findViewById<FloatingActionButton>(R.id.fab)
+		fab.setOnClickListener { view ->
 			Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 					.setAction("Action", null).show()
-		})
+		}
 
 	}
 
@@ -76,16 +76,12 @@ class IntroActivity : AppCompatActivity() {
 	 */
 	inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
-		override fun getItem(position: Int): Fragment {
-			// getItem is called to instantiate the fragment for the given page.
-			// Return a PlaceholderFragment (defined as a static inner class below).
-			return PlaceholderFragment.newInstance(position + 1)
-		}
+		override fun getItem(position: Int): Fragment =// getItem is called to instantiate the fragment for the given page.
+		// Return a PlaceholderFragment (defined as a static inner class below).
+				PlaceholderFragment.newInstance(position + 1)
 
-		override fun getCount(): Int {
-			// Show 3 total pages.
-			return 3
-		}
+		override fun getCount(): Int =// Show 3 total pages.
+				3
 
 		override fun getPageTitle(position: Int): CharSequence? {
 			when (position) {
@@ -115,7 +111,7 @@ class IntroActivity : AppCompatActivity() {
 			 * The fragment argument representing the section number for this
 			 * fragment.
 			 */
-			private val ARG_SECTION_NUMBER = "section_number"
+			private const val ARG_SECTION_NUMBER = "section_number"
 
 			/**
 			 * Returns a new instance of this fragment for the given section

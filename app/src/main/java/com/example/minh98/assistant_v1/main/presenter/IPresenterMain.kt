@@ -9,14 +9,9 @@ import com.example.minh98.assistant_v1.viewsLayout.TiGiaNgoaiTe.ItemTiGia
  */
 interface IPresenterMain {
 	fun onResults(data: String?)
-	fun onPartialResults(data: String?)
-	fun startAnimationListening()
-	fun onError()
-	fun updateColorCircle()
 	fun showTiGiaNgoaiTe(result: ItemTiGia)
 	fun sendThoiTietCurrent(result: ItemThoiTiet)
 	fun sendThoiTiet7Ngay(result: ItemThoiTiet7Ngay)
-	fun showKqxs(result: MutableList<String>)
 	fun handleTranslate(keywordSearch: String, ngonNgu: String)
 	fun handleFindDirection(from: String?, to: String?)
 	fun handleAlarm(hour: String?, mode: String?=null, min: String?)
@@ -34,7 +29,6 @@ interface IPresenterMain {
 
 	fun handleMap(locate: String?)
 	fun handleCalculator(v1: String, operatorr: String, v2: String)
-	fun handleKqxs(mien: String?)
 	fun handleFlash(mode: String?)
 	fun handleWeather(locate: String?=null)
 	fun handleBrightNess(value: String?)
@@ -42,7 +36,6 @@ interface IPresenterMain {
 	fun koHieu(data: String)
 	fun showReplyResultTranslate(result: String)
 	fun updateWindowAfterSetBrightNess(brightness: Int)
-	fun stopThinking()
 	fun showReplyWifiOn()
 	fun showReplyWifiOff()
 	fun showReplyCallUSSD(value: String)

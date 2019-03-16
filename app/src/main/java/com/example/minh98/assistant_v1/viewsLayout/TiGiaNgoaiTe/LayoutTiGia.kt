@@ -1,6 +1,8 @@
 package com.example.minh98.assistant_v1.viewsLayout.TiGiaNgoaiTe
 
 import android.content.Context
+import android.os.Build
+import android.support.annotation.RequiresApi
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
@@ -26,6 +28,7 @@ class LayoutTiGia: LinearLayout {
 	constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr){
 		init(context)
 	}
+	@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 	constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes){
 		init(context)
 	}
@@ -41,6 +44,6 @@ class LayoutTiGia: LinearLayout {
 	private fun init(mContext: Context?){
 		this.mContext=mContext
 		layout= LayoutInflater.from(mContext).inflate(R.layout.layout_ti_gia_ngoai_te,null)
-		list=layout?.findViewById<ListView>(R.id.list_ngoai_te)
+		list=layout?.findViewById(R.id.list_ngoai_te)
 	}
 }

@@ -14,18 +14,11 @@ import com.example.minh98.assistant_v1.viewsLayout.Model
  */
 
 
-class AdapterTiGia : ArrayAdapter<ItemTiGiaNgoaiTe> {
-	var mContext: Context? = null
-	var id = -1
-	var mList: MutableList<ItemTiGiaNgoaiTe> = mutableListOf()
-	val model = Model()
-
-	constructor(context: Context?, resource: Int, objects: MutableList<ItemTiGiaNgoaiTe>) :
-			super(context, resource, objects) {
-		mContext = context
-		id = resource
-		mList = objects
-	}
+class AdapterTiGia(context: Context?, resource: Int, objects: MutableList<ItemTiGiaNgoaiTe>) : ArrayAdapter<ItemTiGiaNgoaiTe>(context, resource, objects) {
+	var mContext: Context? = context
+	var id = resource
+	var mList: MutableList<ItemTiGiaNgoaiTe> = objects
+	private val model = Model()
 
 	override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
 		val viewLayout = (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)

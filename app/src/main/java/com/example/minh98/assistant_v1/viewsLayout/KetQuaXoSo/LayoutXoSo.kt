@@ -1,6 +1,8 @@
 package com.example.minh98.assistant_v1.viewsLayout.KetQuaXoSo
 
 import android.content.Context
+import android.os.Build
+import android.support.annotation.RequiresApi
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -28,6 +30,7 @@ class LayoutXoSo : LinearLayout {
 		init(context)
 	}
 
+	@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 	constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
 		init(context)
 	}
@@ -52,7 +55,7 @@ class LayoutXoSo : LinearLayout {
 		return this
 	}
 
-	private fun f(id: Int): TextView = layout.findViewById<TextView>(id)
+	private fun f(id: Int): TextView = layout.findViewById(id)
 
 
 }

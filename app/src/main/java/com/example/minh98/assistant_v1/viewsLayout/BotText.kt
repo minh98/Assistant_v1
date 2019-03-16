@@ -27,7 +27,7 @@ class BotText : android.support.v7.widget.AppCompatTextView {
 
 	private fun init() {
 		setBackgroundResource(R.drawable.bg_bot_text)
-		setPadding(16,8,16,8)
+		setPadding(32,16,32,16)
 		val layoutParam: LinearLayout.LayoutParams=(LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT))
 		setTextColor(Color.WHITE)
 		layoutParam.setMargins(8,8,80,8)

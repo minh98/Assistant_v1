@@ -20,17 +20,17 @@ import java.util.*
 class AdapterThoiTiet(val mContext: Context, data:MutableList<ThoiTiet7Ngay>)
 	: RecyclerView.Adapter<AdapterThoiTiet.ViewHolder>() {
 
-	val itemThoiTiet= data
-	val model=Model()
+	private val itemThoiTiet= data
+	private val model=Model()
 
 
 	override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
-		holder?.tvDoMin?.text= "${itemThoiTiet?.get(position).tempMin.toString()}°"
-		holder?.tvDoMax?.text="${itemThoiTiet?.get(position).tempMax.toString()}°"
+		holder?.tvDoMin?.text= "${itemThoiTiet[position].tempMin}°"
+		holder?.tvDoMax?.text="${itemThoiTiet[position].tempMax}°"
 		Picasso.with(mContext)
-				.load("http://openweathermap.org/img/w/${itemThoiTiet?.get(position)?.icon}.png")
+				.load("http://openweathermap.org/img/w/${itemThoiTiet[position].icon}.png")
 				.into(holder?.imgThoiTiet)
-		holder?.tvNgay?.text=model.dayOfWeek(Date(itemThoiTiet?.get(position).ngay*1000)).toString()
+		holder?.tvNgay?.text= model.dayOfWeek(Date(itemThoiTiet[position].ngay*1000))
 	}
 
 	override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ViewHolder {
@@ -39,21 +39,13 @@ class AdapterThoiTiet(val mContext: Context, data:MutableList<ThoiTiet7Ngay>)
 		return ViewHolder(view)
 	}
 
-	override fun getItemCount(): Int {
-		 return itemThoiTiet.size
-	}
+	override fun getItemCount(): Int = itemThoiTiet.size
 
 	inner class ViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
-		val tvNgay:TextView
-		val imgThoiTiet:ImageView
-		val tvDoMax:TextView
-		val tvDoMin:TextView
-		init {
-			tvNgay= itemView!!.findViewById(R.id.tv_ngay)
-			imgThoiTiet=itemView!!.findViewById(R.id.img_thoi_tiet)
-			tvDoMax=itemView!!.findViewById(R.id.tv_do_max)
-			tvDoMin=itemView!!.findViewById(R.id.tv_do_min)
-		}
+		val tvNgay:TextView = itemView!!.findViewById(R.id.tv_ngay)
+		val imgThoiTiet:ImageView = itemView!!.findViewById(R.id.img_thoi_tiet)
+		val tvDoMax:TextView = itemView!!.findViewById(R.id.tv_do_max)
+		val tvDoMin:TextView = itemView!!.findViewById(R.id.tv_do_min)
 	}
 
 }

@@ -7,8 +7,8 @@ import android.content.SharedPreferences
  * Created by minh98 on 07/09/2017.
  */
 class SharedPreference(context:Context,key:String) {
-	val sharedPreference=context.getSharedPreferences(key,Context.MODE_PRIVATE)
-	lateinit var editor:SharedPreferences.Editor
+	private val sharedPreference=context.getSharedPreferences(key,Context.MODE_PRIVATE)
+	private lateinit var editor:SharedPreferences.Editor
 
 	fun <T>put(key: String,value:T){
 		editor=sharedPreference.edit()
@@ -21,7 +21,6 @@ class SharedPreference(context:Context,key:String) {
 				is Boolean->putBoolean(key,false)
 				else -> null
 			}
-			commit()
 			apply()
 		}
 	}

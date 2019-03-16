@@ -7,13 +7,9 @@ import android.hardware.Camera
 import android.net.Uri
 import android.net.wifi.WifiManager
 import android.os.AsyncTask
-import android.os.Bundle
 import android.provider.AlarmClock
 import android.provider.ContactsContract
 import android.provider.Settings
-import android.speech.RecognitionListener
-import android.speech.RecognizerIntent
-import android.speech.SpeechRecognizer
 import android.util.Log
 import android.view.Window
 import com.example.minh98.assistant_v1.listContact.ItemContact
@@ -33,168 +29,29 @@ import java.io.IOException
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
-import java.util.*
 
 
 /**
  * Created by minh98 on 09/09/2017.
  */
 class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) {
-
-	var speech: SpeechRecognizer
-	var intentSpeech: Intent
-	var isListening = false
-	var camera: Camera? = null
-	var param: Camera.Parameters? = null
+	private var camera: Camera? = null
+	private var param: Camera.Parameters? = null
 	var hasFlash = false
 	private lateinit var dataNumberTaxi: MutableList<MutableList<String>>
 	private lateinit var dataUrlMap: MutableList<MutableList<String>>
 
-
 	init {
-		speech = SpeechRecognizer.createSpeechRecognizer(mContext)
-		//init intent
-		intentSpeech = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-		initIntent()
-		//set listener for speech
-		setListenerSpeech()
-//		handle=handlers()
-		readNumberTaxi()
+	    readNumberTaxi()
 		readUrlMapp()
-	}
-
-	private fun setListenerSpeech() {
-		speech.setRecognitionListener(listener())
-	}
-
-	private fun initIntent() {
-		/**
-		 * by vav
-		 */
-		intentSpeech.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH)
-		intentSpeech.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale("vi"))
-		intentSpeech.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, Locale("vi"))
-		intentSpeech.putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE, Locale("vi"))
-		intentSpeech.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1)
-		intentSpeech.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
-		intentSpeech.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, mContext.packageName)
-
-
-		/**
-		 * by red hat :))
-		 */
-
-		//		intentSpeech.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE,
-//				Locale("vi"))
-//		intentSpeech.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,
-//				mContext.packageName)
-//		intentSpeech.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-//				RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-//
-//		intentSpeech.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 3)
-//
-//		intentSpeech.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS,true)
-//
-//		intentSpeech.putExtra("android.speech.extra.DICTATION_MODE", true)
-//
-//		intentSpeech.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, true)
-
-		//xong intent
-	}
-
-	fun startListen() {
-		speech.startListening(intentSpeech)
-		mIPresenter.startAnimationListening()
-		log("listenning", "started")
-	}
-
-	fun stopListen() {
-		speech.stopListening()
-	}
-
-	private fun log(k: String, v: String) {
-		Log.e(k, v)
-	}
-
-	private fun getErrorText(errorCode: Int): String {
-		val message: String = when (errorCode) {
-			SpeechRecognizer.ERROR_AUDIO -> "Audio recording error"
-			SpeechRecognizer.ERROR_CLIENT -> "Client side error"
-			SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "Insufficient permissions"
-			SpeechRecognizer.ERROR_NETWORK -> "Network error"
-			SpeechRecognizer.ERROR_NETWORK_TIMEOUT -> "Network timeout"
-			SpeechRecognizer.ERROR_NO_MATCH -> "No match"
-			SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> "RecognitionService busy"
-			SpeechRecognizer.ERROR_SERVER -> "error from server"
-			SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "No speech input"
-			else -> "Didn't understand, please try again."
-		}
-		return message
-	}
-
-	fun speechDestroy() {
-		speech.destroy()
-	}
-
-	fun speechInit() {
-		speech = SpeechRecognizer.createSpeechRecognizer(mContext)
-		speech.setRecognitionListener(listener())
-	}
-
-	inner class listener : RecognitionListener {
-		override fun onReadyForSpeech(p0: Bundle?) {
-			log("listening", "onReadyForSpeech")
-		}
-
-		override fun onRmsChanged(p0: Float) {
-			log("listening", "on rms changed")
-		}
-
-		override fun onBufferReceived(p0: ByteArray?) {
-			log("listening", "on bufferreceived")
-		}
-
-		override fun onPartialResults(p0: Bundle?) {
-			log("listening", "on partialresults")
-			//xu li data
-			val data = p0?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.get(0)
-			mIPresenter.onPartialResults(data)
-		}
-
-		override fun onEvent(p0: Int, p1: Bundle?) {
-			log("listening", "on event")
-		}
-
-		override fun onBeginningOfSpeech() {
-			log("listening", "on beginningofspeech")
-		}
-
-		override fun onEndOfSpeech() {
-			log("listening", "on end of speech")
-		}
-
-		override fun onError(p0: Int) {
-			log("listening", getErrorText(p0))
-			speech.cancel()
-			mIPresenter.onError()
-			isListening = false
-		}
-
-		override fun onResults(p0: Bundle?) {
-			log("listening", "on results")
-			//xu ly ket qua
-			val data = p0?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.get(0)
-			mIPresenter.onResults(data)
-			isListening = false
-
-		}
+		onStart()
 	}
 
 	fun loadTiGiaNgoaiTe() {
 		AsynTiGiaNgoaiTe().execute("http://dongabank.com.vn/exchange/export")//
 	}
 
-	fun loadThoiTiet(locate: String? = null, lat: Float? = null, lon: Float? = null) {
+	fun loadThoiTiet(locate: String? = null, lat: Float = 21.585045f, lon: Float = 105.8041923f) {
 		val locate = Uri.encode(locate)
 
 
@@ -217,10 +74,6 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 
 	}
 
-	fun loadKetQuaXoSo() {
-		AsynKetQuaXoSo().execute("http://xskt.com.vn/rss-feed/mien-bac-xsmb.rss")
-	}
-
 	//load ti gia ngoai te
 	inner class AsynTiGiaNgoaiTe : AsyncTask<String, Unit, ItemTiGia>() {
 
@@ -231,8 +84,8 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 			val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
 			connection.setRequestProperty("User-Agent", "Mozilla/5.0 ( compatible ) ")
 			connection.setRequestProperty("Accept", "*/*")
-			val isr: InputStreamReader = InputStreamReader(connection.inputStream, "UTF-8")
-			val br: BufferedReader = BufferedReader(isr)
+			val isr = InputStreamReader(connection.inputStream, "UTF-8")
+			val br = BufferedReader(isr)
 
 			var s = br.readText()
 
@@ -242,9 +95,9 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 			s = s.replace(")", "")
 			val gs = Gson()
 			val dstg: ItemTiGia = gs.fromJson<ItemTiGia>(s, ItemTiGia::class.java)
-			log("size:", dstg.items.size.toString())
+			Log.e("size:", dstg.items.size.toString())
 			dstg.items = dstg.items.filter {
-				it.type.equals("AUD")
+				it.type == "AUD"
 						|| it.type == "EUR"
 						|| it.type == "AUD"
 						|| it.type == "GBP"
@@ -270,8 +123,8 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 			val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
 //			connection.setRequestProperty("User-Agent", "Mozilla/5.0 ( compatible ) ")
 //			connection.setRequestProperty("Accept", "*/*")
-			val isr: InputStreamReader = InputStreamReader(connection.inputStream, "UTF-8")
-			val br: BufferedReader = BufferedReader(isr)
+			val isr = InputStreamReader(connection.inputStream, "UTF-8")
+			val br = BufferedReader(isr)
 
 			val s = br.readText()
 
@@ -279,7 +132,7 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 			isr.close()
 			val gs = Gson()
 			val tt: ItemThoiTiet = gs.fromJson<ItemThoiTiet>(s, ItemThoiTiet::class.java)
-			log("size:", tt.weather.size.toString())
+			Log.e("size:", tt.weather.size.toString())
 			return tt
 		}
 
@@ -300,8 +153,8 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 			val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
 //			connection.setRequestProperty("User-Agent", "Mozilla/5.0 ( compatible ) ")
 //			connection.setRequestProperty("Accept", "*/*")
-			val isr: InputStreamReader = InputStreamReader(connection.inputStream, "UTF-8")
-			val br: BufferedReader = BufferedReader(isr)
+			val isr = InputStreamReader(connection.inputStream, "UTF-8")
+			val br = BufferedReader(isr)
 
 			val s = br.readText()
 
@@ -342,8 +195,8 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 			val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
 //			connection.setRequestProperty("User-Agent", "Mozilla/5.0 ( compatible ) ")
 //			connection.setRequestProperty("Accept", "*/*")
-			val isr: InputStreamReader = InputStreamReader(connection.inputStream, "UTF-8")
-			val br: BufferedReader = BufferedReader(isr)
+			val isr = InputStreamReader(connection.inputStream, "UTF-8")
+			val br = BufferedReader(isr)
 
 			val s = br.readText()
 
@@ -351,7 +204,7 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 			br.close()
 			isr.close()
 
-			var data = mutableListOf<String>()
+			var data: MutableList<String>
 			val kqxs = findKqxs(s)
 			Log.e("s", kqxs)
 
@@ -364,7 +217,7 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 			data = data.map { it.split(":")[1].trim() } as MutableList<String>
 			data.add(title)
 			Log.e("size", data.size.toString())
-			for (i in 0..data.size - 1) {
+			for (i in 0 until data.size) {
 				Log.e(i.toString(), data[i])
 			}
 			return data
@@ -389,7 +242,7 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 		}
 
 		override fun onPostExecute(result: MutableList<String>) {
-			mIPresenter.showKqxs(result)
+//			mIPresenter.showKqxs(result)
 		}
 
 	}
@@ -397,76 +250,6 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 
 	//TODO command
 	fun onOpenMap(locate: String? = null, from: String? = null, to: String? = null) {
-		/* che do streetView tai vi tri nhat dinh
-		// Create a Uri from an intent string. Use the result to create an Intent.
-		val gmmIntentUri = Uri.parse("google.streetview:cbll=46.414382,10.013988")
-
-// Create an Intent from gmmIntentUri. Set the action to ACTION_VIEW
-		val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-// Make the Intent explicit by setting the Google Maps package
-		mapIntent.`package` = "com.google.android.apps.maps"
-
-// Attempt to start an activity that can handle the Intent
-		startActivity(mapIntent) */
-
-
-		/**
-		 * che do xem ban do tai vi tri nhat dinh
-
-		val gmmIntentUri = Uri.parse("geo:37.7749,-122.4194")
-		val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-		mapIntent.`package` = "com.google.android.apps.maps"
-		if (mapIntent.resolveActivity(packageManager) != null) {
-		startActivity(mapIntent)
-		}*/
-
-
-		/**
-		 * // Search for restaurants nearby
-
-
-		val gmmIntentUri = Uri.parse("geo:0,0?q=restaurants")
-		val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-		mapIntent.`package` = "com.google.android.apps.maps"
-		startActivity(mapIntent)*/
-
-
-		/**
-		 * Search for restaurants in San Francisco
-
-		//
-		val gmmIntentUri = Uri.parse("geo:37.7749,-122.4194?q=restaurants")
-		val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-		mapIntent.`package` = "com.google.android.apps.maps"
-		startActivity(mapIntent) */
-
-
-		/**
-		 * zoom 10
-
-		val gmmIntentUri = Uri.parse("geo:37.7749,-122.4194?z=10&q=restaurants")
-		val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-		mapIntent.`package` = "com.google.android.apps.maps"
-		startActivity(mapIntent) */
-
-
-		/**
-		 * location search
-
-		val gmmIntentUri = Uri.parse("geo:0,0?q=cntt thai nguyen, vietnam")
-		val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-		mapIntent.`package` = "com.google.android.apps.maps"
-		startActivity(mapIntent)*/
-
-
-		/**
-		 * tim duong di giua 2 diem(location hien tai va diem dich)
-
-
-		val gmmIntentUri = Uri.parse("google.navigation:q=Taronga+Zoo,+Sydney+Australia&mode=b")
-		val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-		mapIntent.`package` = "com.google.android.apps.maps"
-		startActivity(mapIntent)*/
 
 		/**
 		 * tim duong di giua 2 diem
@@ -619,51 +402,68 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 	}
 
 	//TODO xu ly request
-	/**
-	 * xu li du lieu nguoi dung noi vao thanh lenh cu the
-	 */
+
 	fun handleRequest(data: String) {
 		val data = data.toLowerCase()
-		if (handle1(data)) {
-			//la gi(tim kiem, translate)
-		} else if (handle2(data)) {
-			//bang bao nhieu(tinh toan)
-		} else if (handle3(data)) {
-			//o dau (tim vi tri)
-		} else if (handle4(data)) {
-			//ket qua xo so( ket qua so xo)
-		} else if (handle5(data)) {
-			//den flash(bat/tat den flash)
-		} else if (handle6(data)) {
-			//video (xem video, mo video, tim video)
-		} else if (handle7(data)) {
-			//thoi tiet( thoi tiet o ha nam, thoi tiet o viet nam)
-		} else if (handle8(data)) {
-			//am lich(ngay 1 thang 2 la ngay bao nhieu am lich)
-		} else if (handle9(data)) {
-			//taxi(goi taxi mai linh thai nguyen..)
-		} else if (handle10(data)) {
-			//ngoai te(ti gia ngoai te..)
-		} else if (handle11(data)) {
-			//do sang man hinh(tang so sang man hinh len mot chut)
-		} else if (handle12(data)) {
-			//tai khoan(kiem tra tai khoan)
-		} else if (handle13(data)) {
-			//tin nhan(gui tin nhan,gui ti nhan cho minh 5 gio di chay bo ho)
-		} else if (handle14(data)) {
-			//tim so(tim so dien thoai cua minh)
-		} else if (handle15(data)) {
-			//vao trang(vao trang xem.vn)
-		} else if (handle16(data)) {
-			//gan day(co nha hang nao gan day khong)
-		} else if (handle17(data)) {
-			//wifi(bat/tat wifi)
-		} else if (handle18(data)) {
-			//bao thuc(dat bao thuc lluc 6 gio 10
-		} else if (handle19(data)) {
-			//tim duong (tim duong tu ha nam den thai nguyen)
-		} else {
-			mIPresenter.koHieu(data)
+		when {
+			handle1(data) -> {
+				//la gi(tim kiem, translate)
+			}
+			handle2(data) -> {
+				//bang bao nhieu(tinh toan)
+			}
+			handle3(data) -> {
+				//o dau (tim vi tri)
+			}
+			handle4(data) -> {
+				//ket qua xo so( ket qua so xo)
+			}
+			handle5(data) -> {
+				//den flash(bat/tat den flash)
+			}
+			handle6(data) -> {
+				//video (xem video, mo video, tim video)
+			}
+			handle7(data) -> {
+				//thoi tiet( thoi tiet o ha nam, thoi tiet o viet nam)
+			}
+			handle8(data) -> {
+				//am lich(ngay 1 thang 2 la ngay bao nhieu am lich)
+			}
+			handle9(data) -> {
+				//taxi(goi taxi mai linh thai nguyen..)
+			}
+			handle10(data) -> {
+				//ngoai te(ti gia ngoai te..)
+			}
+			handle11(data) -> {
+				//do sang man hinh(tang so sang man hinh len mot chut)
+			}
+			handle12(data) -> {
+				//tai khoan(kiem tra tai khoan)
+			}
+			handle13(data) -> {
+				//tin nhan(gui tin nhan,gui ti nhan cho minh 5 gio di chay bo ho)
+			}
+			handle14(data) -> {
+				//tim so(tim so dien thoai cua minh)
+			}
+			handle15(data) -> {
+				//vao trang(vao trang xem.vn)
+			}
+			handle16(data) -> {
+				//gan day(co nha hang nao gan day khong)
+			}
+			handle17(data) -> {
+				//wifi(bat/tat wifi)
+			}
+			handle18(data) -> {
+				//bao thuc(dat bao thuc lluc 6 gio 10
+			}
+			handle19(data) -> {
+				//tim duong (tim duong tu ha nam den thai nguyen)
+			}
+			else -> mIPresenter.koHieu(data)
 		}
 	}
 
@@ -676,7 +476,7 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 		 * key: la gi,nghia la gi
 		 * --nghia (tieng anh) la gi: phan tich xem nguoi dung muon dich cau do sang ngon ngu nuoc nao,
 		 * neu khong tim ra duoc ngon ngu cua nuoc nao thi se searchWeb nhu binh thuong
-		 * --la gi: searchWeb luon khong can phan tich cau
+		 * --la gi: search Web luon khong can phan tich cau
 		 */
 		//-nghia la gi
 
@@ -729,16 +529,16 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 
 	private fun handle2(data: String): Boolean {
 		//bang bao nhieu(tinh toan)
-		val reg = Regex("""^(\d+) (cộng|trừ|nhân|chia|\+|\-|\*|\/) (\d+) (bằng bao nhiêu|bằng mấy|bằng|=)?$""")
-		if (reg.matches(data)) {
+		val reg = Regex("""^(\d+) (cộng|trừ|nhân|chia|\+|-|\*|/) (\d+) (bằng bao nhiêu|bằng mấy|bằng|=)?$""")
+		return if (reg.matches(data)) {
 			val entire = reg.matchEntire(data)?.destructured!!
 			val v1 = entire.component1()
 			val operatorr = entire.component2()
 			val v2 = entire.component3()
 			mIPresenter.handleCalculator(v1, operatorr, v2)
-			return true
+			true
 		} else {
-			return false
+			false
 		}
 	}
 
@@ -746,37 +546,38 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 		//o dau (tim vi tri)
 		val reg1 = Regex("""^(hãy )?(tìm kiếm |tìm )?vị trí( của)? (.*)$""")
 		val reg2 = Regex("""^(.*) (ở đâu|ở chỗ nào)( thế nhỉ| vậy nhỉ| nhỉ| vậy| thế)?$""")
-		if (reg1.matches(data) && !reg2.matches(data)) {
+		return if (reg1.matches(data) && !reg2.matches(data)) {
 			mIPresenter.handleMap(locate = reg1.matchEntire(data)?.destructured?.component4())
-			return true
+			true
 		} else if (reg2.matches(data)) {
 			mIPresenter.handleMap(locate = reg2.matchEntire(data)?.destructured?.component1())
-			return true
+			true
 		} else {
-			return false
+			false
 		}
 
 	}
 
 	private fun handle4(data: String): Boolean {
+		return false
 		//ket qua xo so( ket qua so xo)
 		val reg1 = Regex("""^(hãy )?(xem |mở |kiểm tra |bật )?kết quả (sổ số|xổ xố|sổ xố|xổ số) (miền bắc|miền nam|miền trung)( đi)?$""")
-		if (reg1.matches(data)) {
-			mIPresenter.handleKqxs(mien = reg1.matchEntire(data)?.destructured?.component4())
-			return true
+		return if (reg1.matches(data)) {
+//			mIPresenter.handleKqxs(mien = reg1.matchEntire(data)?.destructured?.component4())
+			true
 		} else {
-			return false
+			false
 		}
 	}
 
 	private fun handle5(data: String): Boolean {
 		//den flash(bat/tat den flash)
 		val reg1 = Regex("""^(hãy )?(bật|tắt)( đèn)? flash( lên đi| đi)?$""")
-		if (reg1.matches(data)) {
+		return if (reg1.matches(data)) {
 			mIPresenter.handleFlash(mode = reg1.matchEntire(data)?.destructured?.component2())
-			return true
+			true
 		} else {
-			return false
+			false
 		}
 
 	}
@@ -785,14 +586,14 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 		//video (xem video, mo video, tim video)
 		val reg1 = Regex("""^(hãy )?(xem|mở|bật) video( đi)?$""")
 		val reg2 = Regex("""^(hãy )?(xem|mở|bật) video( của)? (.*?)( giúp tôi đi| giúp tôi| đi)?$""")
-		if (reg1.matches(data) && !reg2.matches(data)) {
+		return if (reg1.matches(data) && !reg2.matches(data)) {
 			mIPresenter.handleYoutube()
-			return true
+			true
 		} else if (reg2.matches(data)) {
 			mIPresenter.handleYoutube(search = reg2.matchEntire(data)?.destructured?.component4())
-			return true
+			true
 		} else {
-			return false
+			false
 		}
 	}
 
@@ -803,25 +604,27 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 		val reg1 = Regex("""^(hãy |mở )?(xem dự báo thời tiết|dự báo thời tiết|thời tiết)( của| ở| tại)? (.*?)( giúp tôi đi| giúp tôi| đi)?$""")
 		val reg2 = Regex("""^(bật |mở |xem )?(dự báo thời tiết|thời tiết)( giúp tôi đi| giúp tôi| đi)?$""")
 
-		if (reg1.matches(data)) {
-			mIPresenter.handleWeather(locate = reg1.matchEntire(data)?.destructured?.component4())
-			return true
-		} else if (reg2.matches(data)) {
-			Log.e("log2", reg2.matchEntire(data)?.destructured?.component2())
-			mIPresenter.handleWeather()
-			return true
-		} else {
-			Log.e("log3", "khong hop le")
-			return false
+		return when {
+			reg1.matches(data) -> {
+				mIPresenter.handleWeather(locate = reg1.matchEntire(data)?.destructured?.component4())
+				true
+			}
+			reg2.matches(data) -> {
+				Log.e("log2", reg2.matchEntire(data)?.destructured?.component2())
+				mIPresenter.handleWeather()
+				true
+			}
+			else -> {
+				Log.e("log3", "khong hop le")
+				false
+			}
 		}
 	}
 
-	private fun handle8(data: String): Boolean {
-		//am lich(ngay 1 thang 2 la ngay bao nhieu am lich)
-		//chua co nguon du lieu
-		//TODO
-		return false
-	}
+	private fun handle8(data: String): Boolean =//am lich(ngay 1 thang 2 la ngay bao nhieu am lich)
+	//chua co nguon du lieu
+	//TODO
+			false
 
 	private fun handle9(data: String): Boolean {
 		//taxi(goi taxi mai linh thai nguyen..)
@@ -834,26 +637,26 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 				tinhThanh += "${dataNumberTaxi[i][0]}|"
 		}
 
-		val reg1 = Regex("^(hãy )?(gọi|gọi cho|gọi đến|gọi tới) taxi ($tinhThanh)( giúp tôi với| giúp tôi đi| giúp tôi| đi)?$")
+		val reg1 = Regex("^(hãy )?(gọi|gọi cho|gọi đến|gọi tới)?(.*?)taxi ($tinhThanh)( giúp tôi với| giúp tôi đi| giúp tôi| đi)?$")
 
-		if (reg1.matches(data)) {
-			mIPresenter.handleCallTaxi(locate = reg1.matchEntire(data)?.destructured?.component3(),
+		return if (reg1.matches(data)) {
+			mIPresenter.handleCallTaxi(locate = reg1.matchEntire(data)?.destructured?.component4(),
 					data = dataNumberTaxi)
-			return true
+			true
 		} else {
-			return false
+			false
 		}
 	}
 
 	private fun handle10(data: String): Boolean {
 		//ngoai te(ti gia ngoai te..)
-		val reg1 = Regex("""^(hãy )?(xem |mở )?tỉ giá ngoại tệ( bây giờ| ngày hôm nay| hôm nay| hiện tại)?( giúp tôi với| giúp tôi đi| giúp tôi| đi)?$""")
+		val reg1 = Regex("""^(hãy )?(xem |mở )?(tỉ|tỷ) giá ngoại tệ( bây giờ| ngày hôm nay| hôm nay| hiện tại)?( giúp tôi với| giúp tôi đi| giúp tôi| đi)?$""")
 
-		if (reg1.matches(data)) {
+		return if (reg1.matches(data)) {
 			mIPresenter.onShowTiGiaNgoaiTe()
-			return true
+			true
 		} else {
-			return false
+			false
 		}
 	}
 
@@ -861,11 +664,11 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 		//do sang man hinh(tang do sang man hinh len mot chut)
 		val reg1 = Regex("""^(hãy )?(tăng|giảm) độ sáng màn hình( lên| xuống)?( một chút| một tí| một tẹo)?( giúp tôi với| giúp tôi đi| giúp tôi| đi)?$""")
 
-		if (reg1.matches(data)) {
+		return if (reg1.matches(data)) {
 			mIPresenter.handleBrightNess(value = reg1.matchEntire(data)?.destructured?.component2())
-			return true
+			true
 		} else {
-			return false
+			false
 		}
 	}
 
@@ -873,11 +676,11 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 		//tai khoan(kiem tra tai khoan)
 		val reg1 = Regex("""^(hãy )?(kiểm tra|xem) tài khoản( gốc| phụ| khuyến mãi| khuyến mại| chính)?( giúp tôi với| giúp tôi đi| giúp tôi| đi)?$""")
 
-		if (reg1.matches(data)) {
+		return if (reg1.matches(data)) {
 			mIPresenter.handleCallUSSD(mode = reg1.matchEntire(data)?.destructured?.component3())
-			return true
+			true
 		} else {
-			return false
+			false
 		}
 	}
 
@@ -885,16 +688,16 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 		//tin nhan(gui tin nhan,gui ti nhan cho minh 5 gio di chay bo ho)
 		val reg1 = Regex("""^(hãy mở| hãy bật| mở| bật)?(gửi tin nhắn|tin nhắn|nhắn tin)( giúp tôi với| giúp tôi đi| giúp tôi| đi)?$""")
 
-		val reg2 = Regex("""^(hãy mở| hãy bật| mở| bật)?(gửi tin nhắn|tin nhắn|nhắn tin) (cho|đến|tới|vào)(\s\S+\s)(.*?)( giúp tôi với| giúp tôi đi| giúp tôi| đi)?$""")
+		val reg2 = Regex("""^(hãy mở| hãy bật| mở| bật)?(gửi tin nhắn|tin nhắn|nhắn tin) (cho|đến|tới|vào)(\s\S+)(.*?)?( giúp tôi với| giúp tôi đi| giúp tôi| đi)?$""")
 
-		if (reg1.matches(data) && !reg2.matches(data)) {
+		return if (reg1.matches(data) && !reg2.matches(data)) {
 			mIPresenter.handleSMS()
-			return true
+			true
 		} else if (reg2.matches(data)) {
 			mIPresenter.handleSMS(address = reg2.matchEntire(data)?.destructured?.component4()!!, smsBody = reg2.matchEntire(data)?.destructured?.component5()!!)
-			return true
+			true
 		} else {
-			return false
+			false
 		}
 	}
 
@@ -902,11 +705,11 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 		//tim so(tim so dien thoai cua minh)
 		val reg1 = Regex("""^(hãy )?tìm số( điện thoại)? của(\s\S+)( giúp tôi với| giúp tôi đi| giúp tôi| đi)?$""")
 
-		if (reg1.matches(data)) {
+		return if (reg1.matches(data)) {
 			mIPresenter.handleFindNumberPhone(name = reg1.matchEntire(data)?.destructured?.component3())
-			return true
+			true
 		} else {
-			return false
+			false
 		}
 	}
 
@@ -914,11 +717,11 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 		//vao trang(vao trang xem.vn)
 		val reg1 = Regex("""^(hãy )?(vào|truy cập|mở)( trang| web)? (\S.*?)( giúp tôi với| giúp tôi đi| giúp tôi| đi)?$""")
 
-		if (reg1.matches(data)) {
+		return if (reg1.matches(data)) {
 			mIPresenter.handleOpenBrowser(url = reg1.matchEntire(data)?.destructured?.component4())
-			return true
+			true
 		} else {
-			return false
+			false
 		}
 	}
 
@@ -926,11 +729,11 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 		//gan day(co nha hang nao gan day khong)
 		val reg1 = Regex("""^(có |tìm kiếm |tìm |xem)?(.*?) (nào )?(gần đây|cạnh đây|xung quanh đây)( hay không| không nhỉ| không vậy| không)?$""")
 
-		if (reg1.matches(data)) {
+		return if (reg1.matches(data)) {
 			mIPresenter.handleSearchMapGanDay(locate = reg1.matchEntire(data)?.destructured?.component2())
-			return true
+			true
 		} else {
-			return false
+			false
 		}
 	}
 
@@ -938,11 +741,11 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 		//wifi(bat/tat wifi)
 		val reg1 = Regex("""^(hãy )?(bật|tắt) wifi( giúp tôi với| giúp tôi đi| giúp tôi| lên đi| đi)?$""")
 
-		if (reg1.matches(data)) {
+		return if (reg1.matches(data)) {
 			mIPresenter.handleWifi(mode = reg1.matchEntire(data)?.destructured?.component2())
-			return true
+			true
 		} else {
-			return false
+			false
 		}
 	}
 
@@ -950,19 +753,21 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 		//bao thuc(dat bao thuc lluc 6 gio 10
 		val reg1 = Regex("""^(hãy )?(đặt báo thức|báo thức tôi|báo thức|đánh thức tôi) (\D+)(\d+)(\D+)( \d+)?( giúp tôi với| giúp tôi đi| giúp tôi| đi)?$""")
 
-		val reg2 = Regex("""^(hãy )?(đặt báo thức|báo thức tôi|báo thức|đánh thức tôi) (\D+) (\d+):(\d+)( giúp tôi với| giúp tôi đi| giúp tôi| đi)?$""")
-		if (reg2.matches(data)) {
-			mIPresenter.handleAlarm(hour = reg2.matchEntire(data)?.destructured?.component4(),
+		val reg2 = Regex("""^(hãy )?(đặt báo thức |báo thức tôi |báo thức |đánh thức tôi )(\d+):(\d+)(.*?)$""")
+		return when {
+			reg2.matches(data) -> {
+				mIPresenter.handleAlarm(hour = reg2.matchEntire(data)?.destructured?.component3(),
 //					mode = reg2.matchEntire(data)?.destructured?.component5(),
-					min = reg2.matchEntire(data)?.destructured?.component5())
-			return true
-		} else if (reg1.matches(data)) {
-			mIPresenter.handleAlarm(hour = reg1.matchEntire(data)?.destructured?.component4(),
-					mode = reg1.matchEntire(data)?.destructured?.component5(),
-					min = reg1.matchEntire(data)?.destructured?.component6())
-			return true
-		} else {
-			return false
+						min = reg2.matchEntire(data)?.destructured?.component4())
+				true
+			}
+			reg1.matches(data) -> {
+				mIPresenter.handleAlarm(hour = reg1.matchEntire(data)?.destructured?.component4(),
+						mode = reg1.matchEntire(data)?.destructured?.component5(),
+						min = reg1.matchEntire(data)?.destructured?.component6())
+				true
+			}
+			else -> false
 		}
 	}
 
@@ -970,12 +775,12 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 		//tim duong (tim duong tu ha nam den thai nguyen)
 		val reg1 = Regex("""^(hãy )?(tìm kiếm |tìm )?(đường)( đi| đến)? (bắt đầu từ|từ) (.*) (đến|tới|đi|về) (.*)( giúp tôi với| giúp tôi đi| giúp tôi| đi)?$""")
 
-		if (reg1.matches(data)) {
+		return if (reg1.matches(data)) {
 			mIPresenter.handleFindDirection(from = reg1.matchEntire(data)?.destructured?.component6(),
 					to = reg1.matchEntire(data)?.destructured?.component8())
-			return true
+			true
 		} else {
-			return false
+			false
 		}
 	}
 
@@ -984,8 +789,6 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 		when (i) {
 			0 -> {
 				//la gi hoac nghia (tieng anh) la gi
-
-
 				/**
 				 * key: la gi,nghia la gi
 				 * --nghia (tieng anh) la gi: phan tich xem nguoi dung muon dich cau do sang ngon ngu nuoc nao,
@@ -1032,7 +835,7 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 					InputStreamReader(mContext.assets.open("taxi_number"), "UTF-8"))
 
 			// do reading, usually loop until end of file reading
-			var fulldata = reader.readText().split("\n")
+			val fulldata = reader.readText().split("\n")
 			for (i in 0 until fulldata.size) {
 				//process line
 				dataNumberTaxi.add(mutableListOf(fulldata[i].split(":")[0], fulldata[i].split(":")[1]))
@@ -1053,7 +856,7 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 					InputStreamReader(mContext.assets.open("urlmap"), "UTF-8"))
 
 			// do reading, usually loop until end of file reading
-			var fulldata = reader.readText().split("\n")
+			val fulldata = reader.readText().split("\n")
 			for (i in 0 until fulldata.size) {
 				//process line
 				dataUrlMap.add(mutableListOf(fulldata[i].split("|")[0], fulldata[i].split("|")[1]))
@@ -1101,17 +904,17 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 			val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
 			connection.setRequestProperty("User-Agent", "Mozilla/5.0 ( compatible ) ")
 			connection.setRequestProperty("Accept", "*/*")
-			val isr: InputStreamReader = InputStreamReader(connection.inputStream, "UTF-8")
-			val br: BufferedReader = BufferedReader(isr)
+			val isr = InputStreamReader(connection.inputStream, "UTF-8")
+			val br = BufferedReader(isr)
 
 			var s = br.readText()
-			log("translate content:", s)
+			Log.e("translate content:", s)
 //			s = s.substring(s.indexOf("\""), s.indexOf("\"", s.indexOf("\""), false))
-			s = s.replace(Regex("""(.*?)(\")(.*?)(\")(.*)"""), "$3")
+			s = s.replace(Regex("""(.*?)(")(.*?)(")(.*)"""), "$3")
 			br.close()
 			isr.close()
 
-			log("translate content:", s)
+			Log.e("translate content:", s)
 			return s
 		}
 
@@ -1127,7 +930,7 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 			wifiManager.isWifiEnabled = true
 			mIPresenter.showReplyWifiOn()
 		} catch (e: Exception) {
-			log("turnonwifi", e.toString())
+			Log.e("turnonwifi", e.toString())
 		}
 	}
 
@@ -1138,7 +941,7 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 			wifiManager.isWifiEnabled = false
 			mIPresenter.showReplyWifiOff()
 		} catch (e: Exception) {
-			log("turnonwifi", e.toString())
+			Log.e("turnonwifi", e.toString())
 		}
 	}
 
@@ -1149,13 +952,12 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 
 	fun setBrightNess(mode: String?) {
 		//Variable to store brightness value
-		var brightness: Int = 0
+		var brightness = 0
 		//Content resolver used as a handle to the system's settings
-		var cResolver: ContentResolver
+		val cResolver: ContentResolver = mContext.contentResolver
 		//Window object, that will store a reference to the current window
 		var window: Window
 		//Get the content resolver
-		cResolver = mContext.getContentResolver()
 
 		try {
 

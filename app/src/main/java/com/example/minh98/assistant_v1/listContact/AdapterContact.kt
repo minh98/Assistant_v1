@@ -12,18 +12,10 @@ import com.example.minh98.assistant_v1.R
  * Created by minh98 on 18/09/2017.
  */
 data class ItemContact(val name:String,val number:String,val id:String,val lookupkey:String)
-class AdapterContact: ArrayAdapter<ItemContact> {
-	var mContext: Context?=null
-	var id=-1
-	var mList:MutableList<ItemContact>?=null
-
-	constructor(context: Context?, resource: Int, objects: MutableList<ItemContact>?) :
-			super(context, resource, objects)
-	{
-		mContext=context
-		id=resource
-		mList=objects
-	}
+class AdapterContact(context: Context?, resource: Int, objects: MutableList<ItemContact>?) : ArrayAdapter<ItemContact>(context, resource, objects) {
+	var mContext: Context?= context
+	var id= resource
+	var mList:MutableList<ItemContact>?= objects
 
 	override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
 		val viewLayout= (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater?)

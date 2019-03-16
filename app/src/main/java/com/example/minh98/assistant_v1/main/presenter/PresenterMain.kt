@@ -23,11 +23,7 @@ import com.example.minh98.assistant_v1.viewsLayout.TiGiaNgoaiTe.ItemTiGia
  */
 class PresenterMain (val mIView:IViewMain,val mContext : Context):IPresenterMain{
 
-	val mModel:ModelMain
-
-	init {
-		mModel= ModelMain(mContext,this)
-	}
+	private val mModel:ModelMain = ModelMain(mContext,this)
 
 	fun onClickItemCommand(item: ItemCommand) {
 		//xu li lenh theo position cua item list
@@ -35,116 +31,12 @@ class PresenterMain (val mIView:IViewMain,val mContext : Context):IPresenterMain
 		mModel.handleRequest(item.name)
 	}
 
-	fun onClickListen(isListening: Boolean) {
-		if(!isListening){
-			try{
-				mModel.stopListen()
-			}catch (e:Exception){
-				Log.e("stop listen",e.toString())
-			}
-
-		}else {
-			try {
-				mModel.startListen()
-				mIView.startAnimationListening()
-			} catch (e: Exception) {
-				Log.e("Listening", e.toString())
-			}
-		}
-
-
-	}
-
-	override fun startAnimationListening() {
-		mIView.startAnimationListening()
-	}
-
 	override fun onResults(data: String?) {
 		mIView.addTextRequestToLayout(data)
-		mIView.setTextListening("Đang suy nghĩ...")
 		/**
 		 * add request xong se xu li text va thuc hien cac lenh tuong ung
 		 */
 		mModel.handleRequest(data!!.toLowerCase())
-	}
-
-	override fun stopThinking() {
-		mIView.startHideAnimCircleListen()
-		mIView.hideTextListening()
-	}
-
-	override fun onPartialResults(data: String?) {
-		mIView.setTextListening(data)
-	}
-
-	override fun onError() {
-		//reset
-//		mIView.stopAnimationListening()
-		mIView.startHideAnimCircleListen()
-		mIView.hideTextListening()
-	}
-
-
-
-	fun animOnListeningEnd() {
-		mIView.hideBtnListen()
-		mIView.startShowAnimCircleListen()
-	}
-
-	fun animOffListeningEnd() {
-		// sau khi btnlisten hien len
-	}
-
-	fun animHideCircleListenEnd() {
-		mIView.hideLayoutCircleListen()
-		mIView.showBtnListen()
-	}
-
-//	fun animShowCircleListenEnd() {
-//		//start thread change color of circle
-//
-//		mModel.runTheadChangeColor()
-//		mIView.startAnimationCircleUpDown()
-//	}
-
-	override fun updateColorCircle() {
-		//update state color (0,1,2)
-		var currentState=mIView.getStateCircleColorCurrent()+1
-
-		if (currentState>2){
-			currentState=0
-		}
-		var circle_listening1=0
-		var circle_listening2=0
-		var circle_listening3=0
-		when(currentState){
-			0->{
-				circle_listening1= R.drawable.circle_listening1
-				circle_listening2= R.drawable.circle_listening2
-				circle_listening3= R.drawable.circle_listening3
-			}
-			1->{
-				circle_listening1= R.drawable.circle_listening3
-				circle_listening2= R.drawable.circle_listening1
-				circle_listening3= R.drawable.circle_listening2
-			}
-			2->{
-				circle_listening1= R.drawable.circle_listening2
-				circle_listening2= R.drawable.circle_listening3
-				circle_listening3= R.drawable.circle_listening1
-			}
-		}
-		Log.e("currentState",currentState.toString())
-		mIView.updateStateCircleColor(currentState)
-		//color xong
-		mIView.updateColorCircle(circle_listening1,circle_listening2,circle_listening3)
-		mIView.clearAnimationUpDown()
-		mIView.startAnimationCircleUpDown()
-	}
-
-	fun animShowCircleListenEnd() {
-		mIView.startAnimationCircleUpDown()
-		mIView.showTextListening()
 	}
 
 	override fun showTiGiaNgoaiTe(result: ItemTiGia) {
@@ -175,20 +67,15 @@ class PresenterMain (val mIView:IViewMain,val mContext : Context):IPresenterMain
 		}
 	}
 
-	override fun showKqxs(result: MutableList<String>) {
-		mIView.showKqxs(result)
-	}
-
 	fun onStop() {
 		mModel.onStop()
 	}
 
 	fun onPause() {
-		mModel.speechDestroy()
 	}
 
 	fun onStart() {
-		mModel.speechInit()
+		mModel.onStart()
 	}
 
 	/**
@@ -197,7 +84,6 @@ class PresenterMain (val mIView:IViewMain,val mContext : Context):IPresenterMain
 
 	override fun handleTranslate(keywordSearch: String, ngonNgu: String) {
 		Log.e("command","handleTranslate")
-		stopThinking()
 		val lagtarget=when(ngonNgu){
 			"anh"->"en"
 			"pháp"->"fr"
@@ -216,7 +102,6 @@ class PresenterMain (val mIView:IViewMain,val mContext : Context):IPresenterMain
 
 	override fun handleFindDirection(from: String?, to: String?) {
 		Log.e("command","handlefind direction")
-		stopThinking()
 		mModel.onOpenMap(from=from,to=to)
 	}
 
@@ -226,10 +111,8 @@ class PresenterMain (val mIView:IViewMain,val mContext : Context):IPresenterMain
 
 	override fun handleAlarm(hour: String?, mode: String?, min: String?) {
 		Log.e("command","handle alarm")
-		stopThinking()
-		val mmin=if(min?.isNotEmpty()!!)min?.trim()?.toInt() else 0
-		var mhour=0
-		mhour = if(mode=="giờ kém"){
+		val mmin=if(min?.isNotEmpty()!!) min.trim().toInt() else 0
+		val mhour: Int = if(mode=="giờ kém"){
 			if(hour?.trim()?.toInt()!!<1) {
 				23
 			}else{
@@ -238,7 +121,7 @@ class PresenterMain (val mIView:IViewMain,val mContext : Context):IPresenterMain
 		}else{
 			hour?.trim()?.toInt()!!
 		}
-		mModel.onSetAlarm(mhour, mmin!!)
+		mModel.onSetAlarm(mhour, mmin)
 
 	}
 
@@ -249,7 +132,6 @@ class PresenterMain (val mIView:IViewMain,val mContext : Context):IPresenterMain
 	override fun handleWifi(mode: String?) {
 
 		Log.e("command","handle wifi")
-		stopThinking()
 		when(mode){
 			"bật"->mModel.turnOnWifi()
 			"tắt"->mModel.turnOffWifi()
@@ -266,13 +148,11 @@ class PresenterMain (val mIView:IViewMain,val mContext : Context):IPresenterMain
 
 	override fun handleSearchMapGanDay(locate: String?) {
 		Log.e("command","handle search map dia diem(vd: nha hang gan day) gan day")
-		stopThinking()
 		mModel.onOpenMap(locate = locate)
 	}
 
 	override fun handleOpenBrowser(url: String?) {
 		Log.e("command","handle open browser")
-		stopThinking()
 		//vd vao trang tinh te
 		var ins=false
 		mModel.getUrlMap().map { if(it[0]==url){
@@ -290,7 +170,6 @@ class PresenterMain (val mIView:IViewMain,val mContext : Context):IPresenterMain
 	override fun handleFindNumberPhone(name: String?) {
 		Log.e("command","handle find number phone")
 		//tim kiem so dien thoai trong danh ba
-		stopThinking()
 		val nums=mModel.getNumberPhone(name!!)
 		if(nums.size>0){
 			mIView.showContacts(nums)
@@ -306,7 +185,6 @@ class PresenterMain (val mIView:IViewMain,val mContext : Context):IPresenterMain
 		 * 2.co noi dung
 		 */
 		//1
-		stopThinking()
 		if(address!=null&&smsBody!=null) {
 			mModel.onOpenSms(address, smsBody)
 		}else{
@@ -320,7 +198,6 @@ class PresenterMain (val mIView:IViewMain,val mContext : Context):IPresenterMain
 
 	override fun handleCallUSSD(mode: String?) {
 		Log.e("command","handle call ussd")
-		stopThinking()
 		val mmode=mode?.trim()
 		// gốc| phụ| khuyến mãi| khuyến mại| chính
 		if(mmode?.isNotEmpty()!! || mmode!=null) {
@@ -340,13 +217,11 @@ class PresenterMain (val mIView:IViewMain,val mContext : Context):IPresenterMain
 
 	override fun onShowTiGiaNgoaiTe() {
 		Log.e("command","handle show ti gia ngoai te")
-		stopThinking()
 		mModel.loadTiGiaNgoaiTe()
 	}
 
 	override fun handleCallTaxi(locate: String?, data: MutableList<MutableList<String>>) {
 		Log.e("command","handle call taxi")
-		stopThinking()
 		val mdata=data.filter { it.contains(locate) }
 		val number=(mdata[0][1]as String).replace(" ","")
 		mModel.onCall(number)
@@ -358,7 +233,6 @@ class PresenterMain (val mIView:IViewMain,val mContext : Context):IPresenterMain
 
 	override fun handleYoutube(search: String?) {
 		Log.e("command","handle youtube")
-		stopThinking()
 		mModel.onOpenYoutube(search)
 	}
 
@@ -368,14 +242,12 @@ class PresenterMain (val mIView:IViewMain,val mContext : Context):IPresenterMain
 
 	override fun handleMap(locate: String?) {
 		Log.e("command","handle map")
-		stopThinking()
 		mModel.onOpenMap(locate = locate)
 	}
 
 	override fun handleCalculator(v1: String, operatorr: String, v2: String) {
 		Log.e("command","handle calculator")
 		//cộng|trừ|nhận|chia
-		stopThinking()
 		if((operatorr=="chia"||operatorr=="/")&&v2.toInt()==0){
 			mIView.showKoTheChia0()
 			return
@@ -397,21 +269,9 @@ class PresenterMain (val mIView:IViewMain,val mContext : Context):IPresenterMain
 		}
 	}
 
-	override fun handleKqxs(mien: String?) {
-		Log.e("command","handle kqxs")
-		//miền bắc|miền nam|miền trung
-		stopThinking()
-		if(mien=="miền bắc"){
-			mModel.loadKetQuaXoSo()
-		}else{
-			mIView.showNoResultKqxsFor(mien=mien)
-		}
-	}
-
 	override fun handleFlash(mode: String?) {
 		Log.e("command","handle flash")
 		//bật|tắt
-		stopThinking()
 		if(mode=="bật"){
 			mModel.turnOnFlash()
 		}else{
@@ -422,57 +282,32 @@ class PresenterMain (val mIView:IViewMain,val mContext : Context):IPresenterMain
 	override fun handleWeather(locate: String?) {
 		Log.e("command","handle weather")
 		//ten dia diem vd: thai nguyen
-		stopThinking()
 		if(locate!=null) {
-			mModel.loadThoiTiet(locate = locate!!)
+			mModel.loadThoiTiet(locate = locate)
 		}else{
-			//neu locate==null thi se lay thoi tiet mac dinh tai vi tri cua minh
-
-			//load lat,lon
-//			val gpsTracker: GPSTracker = GPSTracker(mContext)
-//
-//			val lat:Double
-//			val lon:Double
-//			if (gpsTracker.isGPSTrackingEnabled)
-//			{
-//				lat = gpsTracker.latitude
-//
-//				lon = gpsTracker.longitude
-//			}
-//			else
-//			{
-//				// can't get location
-//				// GPS or Network is not enabled
-//				// Ask user to enable GPS/network in settings
-//				gpsTracker.showSettingsAlert()
-//				return
-//			}
-//			mModel.loadThoiTiet(lat=lat.toFloat(),lon=lon.toFloat())
-//			Log.e("lat",lat.toString())
-//			Log.e("lon",lon.toString())
+			mModel.loadThoiTiet()
 		}
 	}
 
 	override fun handleBrightNess(value: String?) {
 		Log.e("command","handle bright ness")
 		//tăng|giảm
-		stopThinking()
 		mModel.setBrightNess(mode=value)
 	}
 
 	fun handleRequest(data: String) {
+		mIView.addTextRequestToLayout(data)
 		mModel.handleRequest(data.toLowerCase())
 	}
 
 	override fun handleSearchWeb(key: String?) {
-		stopThinking()
 		val url="https://www.google.com/search?q=$key"
 		mModel.onOpenBrowser(url=url)
 	}
 
 	override fun koHieu(data: String) {
-		stopThinking()
 		mIView.showKoHieu(data)
+		handleSearchWeb(data)
 	}
 
 	override fun showReplyResultTranslate(result: String) {

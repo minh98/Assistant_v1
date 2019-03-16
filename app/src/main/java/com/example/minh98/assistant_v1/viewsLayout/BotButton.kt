@@ -41,7 +41,7 @@ class BotButton :AppCompatTextView{
 
 	fun setData(url:String):TextView{
 		val url="https://www.google.com/search?q=$url"
-		val iten:Intent= Intent(Intent.ACTION_VIEW, Uri.parse(url))
+		val iten = Intent(Intent.ACTION_VIEW, Uri.parse(url))
 		setOnClickListener { context.startActivity(iten) }
 		return this
 	}

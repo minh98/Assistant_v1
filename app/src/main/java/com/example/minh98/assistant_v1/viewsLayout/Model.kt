@@ -10,7 +10,7 @@ import java.util.*
 class Model {
 	fun dayOfWeek(date: Date): String {
 		val c: Calendar = Calendar.getInstance()
-		c.setTime(date)
+		c.time = date
 		val day=c.get(Calendar.DAY_OF_WEEK)
 		return when(day){
 			1->"CN"

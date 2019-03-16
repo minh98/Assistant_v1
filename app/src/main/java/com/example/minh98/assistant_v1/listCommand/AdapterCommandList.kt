@@ -14,18 +14,10 @@ import com.example.minh98.assistant_v1.R
  */
 
 data class ItemCommand(val resId:Int,val name:String)
-class AdapterCommandList : ArrayAdapter<ItemCommand> {
-	var mContext:Context?=null
-	var id=-1
-	var mList:MutableList<ItemCommand>?=null
-
-	constructor(context: Context?, resource: Int, objects: MutableList<ItemCommand>?) :
-			super(context, resource, objects)
-	{
-		mContext=context
-		id=resource
-		mList=objects
-	}
+class AdapterCommandList(context: Context?, resource: Int, objects: MutableList<ItemCommand>?) : ArrayAdapter<ItemCommand>(context, resource, objects) {
+	var mContext:Context?= context
+	var id= resource
+	var mList:MutableList<ItemCommand>?= objects
 
 	override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
 		val viewLayout= (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater?)
