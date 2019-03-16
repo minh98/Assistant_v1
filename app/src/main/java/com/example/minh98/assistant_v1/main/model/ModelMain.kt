@@ -463,6 +463,9 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 			handle19(data) -> {
 				//tim duong (tim duong tu ha nam den thai nguyen)
 			}
+			handle20(data) ->{
+				//bat tat den iot
+			}
 			else -> mIPresenter.koHieu(data)
 		}
 	}
@@ -781,6 +784,30 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 			true
 		} else {
 			false
+		}
+	}
+	private fun handle20(data:String):Boolean{
+		//bat/tat den 1/2
+		//bat/tat ho tao cai den 1/2
+		//bat/tat cho tao (tat ca cac den,tat ca den,ca 2 den, het den len)
+		val reg1 = Regex("""^(.*?)(bật|tắt)(.*?)(đèn|bóng đèn|điện)(.*?)(một|hai|1|2|thứ nhất|thứ hai)(.*?)$""")
+		val reg2 = Regex("""^(.*?)(bật|tắt)(.*?)(tất cả|cả 2|cả hai|hết)(.*?)(đèn||bóng đèn|bóng điện)(.*?)$""")
+		return when {
+			reg1.matches(data) -> {
+				Log.e("bongden","matche1")
+				//bat hoac tat mot bong den
+				mIPresenter.handleTurnSingleLed(reg1.matchEntire(data)?.destructured?.component2(),reg1.matchEntire(data)?.destructured?.component6())
+				true
+			}
+			reg2.matches(data) -> {
+				Log.e("bongden","matche2")
+				mIPresenter.handleTurnMultiLed(reg2.matchEntire(data)?.destructured?.component2())
+				true
+			}
+			else -> {
+				Log.e("bongden","khong khop")
+				false
+			}
 		}
 	}
 

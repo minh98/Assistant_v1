@@ -47,4 +47,8 @@ interface IPresenterMain {
 	fun showReplyOpenedYoutube()
 	fun showReplyFlashOff()
 	fun showReplyFlashOn()
+	fun handleTurnSingleLed(status: String?, nameLed: String?)
+	fun handleTurnMultiLed(status: String?)
+
+
 }

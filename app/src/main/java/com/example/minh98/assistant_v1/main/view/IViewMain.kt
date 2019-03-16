@@ -38,4 +38,6 @@ interface IViewMain {
 	fun showReplyOpenedYoutube()
 	fun showReplyFlashOff()
 	fun showReplyFlashOn()
+	fun sendToTurnSingleLed(isOn: Boolean, index: Int)
+	fun sendToTurnMultiLed(isOn: Boolean)
 }

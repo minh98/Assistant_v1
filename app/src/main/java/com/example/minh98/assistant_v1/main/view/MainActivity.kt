@@ -39,6 +39,13 @@ import java.util.*
 
 
 class MainActivity : AppCompatActivity(), IViewMain {
+    override fun sendToTurnSingleLed(isOn: Boolean, index: Int) {
+        addBotTextToLayout("Đang gửi tín hiệu để ${if(isOn){"bật"}else{"tắt"}} đèn $index")
+    }
+
+    override fun sendToTurnMultiLed(isOn: Boolean) {
+        addBotTextToLayout("Đang gửi tín hiệu để ${if(isOn){"bật"}else{"tắt"}} cả hai đèn ")
+    }
 
     //button
     private lateinit var btnListen: FloatingActionButton
