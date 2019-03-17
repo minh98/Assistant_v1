@@ -791,7 +791,7 @@ class ModelMain(private val mContext: Context, val mIPresenter: IPresenterMain) 
 		//bat/tat ho tao cai den 1/2
 		//bat/tat cho tao (tat ca cac den,tat ca den,ca 2 den, het den len)
 		val reg1 = Regex("""^(.*?)(bật|tắt)(.*?)(đèn|bóng đèn|điện)(.*?)(một|hai|1|2|thứ nhất|thứ hai)(.*?)$""")
-		val reg2 = Regex("""^(.*?)(bật|tắt)(.*?)(tất cả|cả 2|cả hai|hết)(.*?)(đèn||bóng đèn|bóng điện)(.*?)$""")
+		val reg2 = Regex("""^(.*?)(bật|tắt)(.*?)(tất cả|cả 2|cả hai|2|hai|hết)(.*?)(đèn|điện|bóng đèn|bóng điện)(.*?)$""")
 		return when {
 			reg1.matches(data) -> {
 				Log.e("bongden","matche1")
