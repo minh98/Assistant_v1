@@ -63,13 +63,13 @@ class PresenterMain(val mIView: IViewMain, val mContext: Context) : IPresenterMa
                 mqtt.push(false,1)
             } else {
                 mIView.sendToTurnSingleLed(false, 2)
-                mqtt.push(true,2)
+                mqtt.push(false,2)
             }
         } else {
             if (nameLed?.contains("một")!! || nameLed?.contains("1") || nameLed?.contains("nhất")) {
                 //den 1
                 mIView.sendToTurnSingleLed(true, 1)
-                mqtt.push(false,1)
+                mqtt.push(true,1)
             } else {
                 mIView.sendToTurnSingleLed(true, 2)
                 mqtt.push(true,2)
