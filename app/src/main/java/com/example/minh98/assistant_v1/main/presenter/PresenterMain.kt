@@ -13,6 +13,11 @@ import com.example.minh98.assistant_v1.main.view.IViewMain
 import com.example.minh98.assistant_v1.viewsLayout.ThoiTiet.ItemThoiTiet
 import com.example.minh98.assistant_v1.viewsLayout.ThoiTiet.ItemThoiTiet7Ngay
 import com.example.minh98.assistant_v1.viewsLayout.TiGiaNgoaiTe.ItemTiGia
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
+import org.eclipse.paho.client.mqttv3.MqttMessage
+import org.eclipse.paho.client.mqttv3.MqttCallbackExtended
+
+
 
 
 /**
@@ -23,21 +28,51 @@ class PresenterMain(val mIView: IViewMain, val mContext: Context) : IPresenterMa
      * val reg1 = Regex("""^(.*?)(bật|tắt|mở)(.*?)(đèn|bóng đèn|điện)(.*?)(một|hai|1|2|thứ nhất|thứ hai)(.*?)$""")
     val reg2 = Regex("""^(.*?)(bật|tắt|mở)(.*?)(tất cả|cả 2|cả hai|hết)(.*?)(đèn||bóng đèn|bóng điện)(.*?)$""")
      */
-    /hai cái hàm bên dưới sẽ phải gọi api để tắt bật thiết bị thật xong rồi mới gọi tới cái mIVIEW để hiển thị kết quả
+//    /hai cái hàm bên dưới sẽ phải gọiọi api để tắt bật thiết bị thật xong rồi mới gọi tới cái mIVIEW để hiển thị kết quả
+    private lateinit var mqtt:Mqtt
+    init {
+        startMqtt()
+    }
+
+    private fun startMqtt() {
+        mqtt = Mqtt(mContext)
+        mqtt.setCallback(object : MqttCallbackExtended {
+            override fun connectComplete(b: Boolean, s: String) {
+
+            }
+
+            override fun connectionLost(throwable: Throwable) {
+
+            }
+
+            @Throws(Exception::class)
+            override fun messageArrived(topic: String, mqttMessage: MqttMessage) {
+                Log.w("Debug", mqttMessage.toString())
+            }
+
+            override fun deliveryComplete(iMqttDeliveryToken: IMqttDeliveryToken) {
+
+            }
+        })
+    }
     override fun handleTurnSingleLed(status: String?, nameLed: String?) {
         if (status == "tắt") {
             if (nameLed?.contains("một")!! || nameLed?.contains("1") || nameLed?.contains("nhất")) {
                 //den 1
                 mIView.sendToTurnSingleLed(false, 1)
+                mqtt.push(false,1)
             } else {
                 mIView.sendToTurnSingleLed(false, 2)
+                mqtt.push(true,2)
             }
         } else {
             if (nameLed?.contains("một")!! || nameLed?.contains("1") || nameLed?.contains("nhất")) {
                 //den 1
                 mIView.sendToTurnSingleLed(true, 1)
+                mqtt.push(false,1)
             } else {
                 mIView.sendToTurnSingleLed(true, 2)
+                mqtt.push(true,2)
             }
         }
     }
@@ -45,8 +80,10 @@ class PresenterMain(val mIView: IViewMain, val mContext: Context) : IPresenterMa
     override fun handleTurnMultiLed(status: String?) {
         if (status == "tắt") {
             mIView.sendToTurnMultiLed(false)
+            mqtt.push(false,3)
         } else {
             mIView.sendToTurnMultiLed(true)
+            mqtt.push(true,3)
         }
     }
 
